@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# env
+.env
+.env.*
+!.env.example
+
+# original avatar uploads kept locally as backup, not committed
+imgs-backup/
+
+# python
+__pycache__/
+*.pyc
