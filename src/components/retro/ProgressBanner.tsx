@@ -56,6 +56,10 @@ export function ProgressBanner() {
     } else if (phase === "voting") {
       if (!confirm("End the retro? This cannot be undone.")) return;
       getSocket().emit("session.end", {});
+      // Hard-redirect immediately so the admin doesn't race the socket round-trip.
+      // Other users still get redirected by their session.terminated handler.
+      try { sessionStorage.setItem("retro:flash", "The retro has ended."); } catch {}
+      window.location.href = "/";
     }
   }
 

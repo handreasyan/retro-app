@@ -1,12 +1,10 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { toast } from "@/components/Toast";
 import { useRetroStore } from "@/lib/retroStore";
 
 export function CancelRetroButton() {
-  const router = useRouter();
   const session = useRetroStore((s) => s.session);
   const me = useRetroStore((s) => s.participants.find((p) => p.id === s.myParticipantId));
   const [busy, setBusy] = useState(false);
@@ -22,7 +20,8 @@ export function CancelRetroButton() {
         const d = await r.json().catch(() => ({}));
         throw new Error(d.error ?? "Failed to cancel");
       }
-      router.push("/");
+      try { sessionStorage.setItem("retro:flash", "Retro canceled."); } catch {}
+      window.location.href = "/";
     } catch (e) {
       toast({ message: (e as Error).message, variant: "danger" });
       setBusy(false);
