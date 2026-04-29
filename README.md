@@ -2,6 +2,19 @@
 
 Internal retrospective tool for Cloudchipr. See `PRD.md` for the product spec and `TECH_PLAN.md` for the architecture.
 
+## Project status
+
+| Area | State |
+|---|---|
+| Backend + real-time + database | Done. All 22 tasks from the original build plan complete. |
+| Persona pool | 158 named personas, every entry has a real avatar in `public/avatars/`. |
+| Frontend / responsive UI | Done. Mobile-friendly: columns collapse on small screens, picker fits narrow viewports. |
+| Multi-user real-time | Wired end-to-end (Socket.IO rooms, presence, blur boundary, voting, comments, action items). |
+| Demo deployment | Render (free Web Service) + Neon (free Postgres) from `handreasyan/retro-app`. See [Current demo deployment](#current-demo-deployment). |
+| ClickUp integration | Code complete, no-ops without env vars. Will light up once SRE provides the four `CLICKUP_*` envs. |
+| Production deploy | Pending. SRE-side. Needs DNS `retro.cloudchipr.com`, managed Postgres, ClickUp envs. |
+| Mobile-native app | Out of scope. |
+
 ## Stack
 
 Next.js 16 (App Router) · TypeScript · Tailwind v4 · Radix-based components · Drizzle ORM · PostgreSQL · Socket.IO · Tiptap.
@@ -115,5 +128,34 @@ Run as a single Node process. Sticky sessions are required if scaling beyond one
 npm run build
 NODE_ENV=production DATABASE_URL=... PORT=3000 npm start
 ```
+
+### Current demo deployment
+
+Live at: **https://retro-app-e584.onrender.com/**
+
+The pre-launch demo is hosted free on a personal account so the team can try it before SRE wires the production version.
+
+| Layer | Service | Plan | Notes |
+|---|---|---|---|
+| App (Next.js + Socket.IO) | Render Web Service | Free | Sleeps after 15 min idle, ~30-60 s cold start. Region: Ohio (US East). |
+| Database | Neon Postgres | Free | 0.5 GB storage cap, autoscaling. Region: AWS US East 1 (N. Virginia). |
+| Source | GitHub `handreasyan/retro-app` | Public | Render auto-redeploys on push to `main`. |
+
+Render service settings:
+
+- Runtime: Node
+- Branch: `main`
+- Build command: `npm install --include=dev && npm run build`
+- Start command: `npm run db:migrate && npm start`
+- Env vars: `DATABASE_URL` only (Neon connection string with `?sslmode=require`)
+
+Once promoted to the production environment, the SRE-side version should:
+
+- Build a static artifact (compile `server.ts` into `dist/`) so `tsx` is no longer a runtime dependency.
+- Run on the company's normal Node infra with a managed Postgres.
+- Be reachable at `retro.cloudchipr.com` via DNS.
+- Have the four ClickUp env vars set so the title-prefill and action-item push features light up.
+
+### Future: production target
 
 DNS: `retro.cloudchipr.com` -> the container.

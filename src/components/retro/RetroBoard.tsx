@@ -83,7 +83,9 @@ export function RetroBoard({ sessionId, hasJoined, readOnly }: { sessionId: stri
         ? "Admin canceled the retro."
         : "The retro has ended.";
       try { sessionStorage.setItem("retro:flash", msg); } catch { /* ignore */ }
-      router.push("/");
+      // Hard navigation: avoids a Next router-cache miss where the stale retro
+      // route shows a 404 before the navigation completes.
+      window.location.href = "/";
     });
 
     return () => {

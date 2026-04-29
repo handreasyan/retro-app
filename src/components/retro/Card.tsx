@@ -59,9 +59,8 @@ export function Card({ card, readOnly }: { card: CardPayload; readOnly: boolean 
           <textarea
             autoFocus
             value={draft}
-            maxLength={500}
             onChange={(e) => setDraft(e.target.value)}
-            className="w-full resize-none rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1 text-sm h-20"
+            className="w-full resize-y rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1 text-sm min-h-20"
           />
         ) : (
           <p className="whitespace-pre-wrap break-words">{card.text}</p>

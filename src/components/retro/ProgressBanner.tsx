@@ -32,12 +32,14 @@ export function ProgressBanner() {
   const prevAllDone = useRef(false);
   useEffect(() => {
     const sig = `${phase}:${totalParticipants}`;
-    if (allDone && !prevAllDone.current && isAdmin) {
+    // Only fire the auto-prompt during the writing phase. The voting -> closed
+    // transition has bigger consequences (saves to past retros, can't be undone)
+    // and is better left to an explicit click on End retro.
+    if (allDone && !prevAllDone.current && isAdmin && phase === "writing") {
       const dismissed = dismissedFor.current && dismissedFor.current.phase === phase && dismissedFor.current.sig === sig;
       if (!dismissed) setAutoPromptOpen(true);
     }
     if (!allDone) {
-      // reset dismissal if state changes (someone unclicks done)
       if (dismissedFor.current?.phase === phase) dismissedFor.current = null;
     }
     prevAllDone.current = allDone;
@@ -101,17 +103,15 @@ export function ProgressBanner() {
     <>
       <Dialog open={autoPromptOpen} onOpenChange={(o) => !o && dismissAutoPrompt()}>
         <DialogContent>
-          <DialogTitle>{phase === "writing" ? "Everyone is done writing" : "Everyone has voted"}</DialogTitle>
+          <DialogTitle>Everyone is done writing</DialogTitle>
           <DialogDescription>
-            {phase === "writing"
-              ? "All users have clicked I'm done. Open the board to reveal every card and start the voting phase?"
-              : "All users have clicked I'm done. End the retro now and save it to past retros?"}
+            All users have clicked I&apos;m done. Open the board to reveal every card and start the voting phase?
           </DialogDescription>
           <div className="mt-6 flex justify-end gap-2">
             <DialogClose asChild>
               <Button variant="ghost" onClick={dismissAutoPrompt}>Not yet</Button>
             </DialogClose>
-            <Button onClick={confirmAutoPrompt}>{phase === "writing" ? "Open the board" : "End retro"}</Button>
+            <Button onClick={confirmAutoPrompt}>Open the board</Button>
           </div>
         </DialogContent>
       </Dialog>

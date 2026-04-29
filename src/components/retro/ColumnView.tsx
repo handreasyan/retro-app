@@ -65,16 +65,14 @@ export function ColumnView({
         <div className={`${collapsed ? "hidden" : "flex"} sm:flex flex-col gap-2 mt-auto pt-2 border-t border-[var(--color-border)]`}>
           <textarea
             value={draft}
-            maxLength={500}
             onChange={(e) => setDraft(e.target.value)}
             placeholder={`Add to ${title.toLowerCase()}...`}
-            className="resize-none rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm h-20"
+            className="resize-y rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm min-h-20"
             onKeyDown={(e) => {
               if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submit();
             }}
           />
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-[var(--color-muted)]">{draft.length}/500</span>
+          <div className="flex justify-end items-center">
             <Button size="sm" onClick={submit} disabled={!draft.trim()}>Add</Button>
           </div>
         </div>

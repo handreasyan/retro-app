@@ -9,7 +9,6 @@ import { buildPersona } from "./persona";
 
 const MAX_LIKES = 3;
 const MAX_DISLIKES = 3;
-const CARD_MAX = 500;
 const COMMENT_MAX = 300;
 
 function room(sessionId: string) { return `retro:${sessionId}`; }
@@ -269,7 +268,7 @@ export function attachSocketHandlers(io: AppIO) {
         return socket.emit("error", { message: "Cards can only be added during the writing phase" });
       }
       if (s.status === "closed") return;
-      const trimmed = (text ?? "").slice(0, CARD_MAX);
+      const trimmed = (text ?? "");
       const [created] = await db
         .insert(cards)
         .values({
@@ -297,7 +296,7 @@ export function attachSocketHandlers(io: AppIO) {
         return socket.emit("error", { message: "Not allowed" });
       }
       const updates: Partial<typeof cards.$inferInsert> = { updatedAt: new Date() };
-      if (typeof text === "string") updates.text = text.slice(0, CARD_MAX);
+      if (typeof text === "string") updates.text = text;
       if (richText !== undefined && c.column === "action_item") updates.richText = richText as object;
       await db.update(cards).set(updates).where(eq(cards.id, id));
       await emitCard(io, sid, id);
