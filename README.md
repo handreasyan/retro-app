@@ -83,8 +83,6 @@ Avatars live under `public/avatars/<slug>.<ext>`. The pool is defined in `src/li
 2. Add a `{ slug, name, avatar, description }` entry to `src/lib/personas.ts`.
 3. Restart the dev server so socket handlers pick up the new pool.
 
-There's also `scripts/fetch_avatars.py` that bulk-downloads avatars from Wikipedia for any persona with a known disambiguation. Useful when you add a batch of new entries.
-
 ## Persona rotation
 
 The slot machine prefers personas that have been used the least. While more than 80% of the pool sits at the lowest pick count, the picker only draws from those least-used entries. Once the floor empties out, it bumps to the next level. Computed live from the `participants` table on each `reserve` call.
