@@ -96,6 +96,7 @@ export const cards = pgTable(
     richText: jsonb("rich_text"),
     pushedToClickupAt: timestamp("pushed_to_clickup_at", { withTimezone: true }),
     clickupTaskId: text("clickup_task_id"),
+    discussedAt: timestamp("discussed_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),

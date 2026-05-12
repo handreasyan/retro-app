@@ -53,6 +53,7 @@ export type ClientToServer = {
   "card.create": (p: { column: "went_well" | "to_improve" | "action_item"; text: string; richText?: unknown }) => void;
   "card.update": (p: { id: string; text?: string; richText?: unknown }) => void;
   "card.delete": (p: { id: string }) => void;
+  "card.discussed.set": (p: { id: string; value: boolean }) => void;
   "done.set": (p: { phase: "writing" | "voting"; value: boolean; targetParticipantId?: string }) => void;
   "session.advance": (p: Record<string, never>) => void;
   "session.end": (p: Record<string, never>) => void;
@@ -81,6 +82,7 @@ export type CardPayload = {
   authorPersona: Persona;
   pushedToClickup: boolean;
   clickupTaskId: string | null;
+  discussedAt: string | null;
   createdAt: string;
   updatedAt: string;
 };

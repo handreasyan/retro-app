@@ -76,6 +76,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
         authorPersona,
         pushedToClickup: !!c.pushedToClickupAt,
         clickupTaskId: c.clickupTaskId,
+        discussedAt: c.discussedAt ? c.discussedAt.toISOString() : null,
         createdAt: c.createdAt.toISOString(),
         updatedAt: c.updatedAt.toISOString(),
       };

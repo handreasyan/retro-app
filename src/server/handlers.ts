@@ -84,6 +84,7 @@ async function emitCard(io: AppIO, sessionId: string, cardId: string, opts: { fo
       authorPersona: buildPersona(author),
       pushedToClickup: !!c.pushedToClickupAt,
       clickupTaskId: c.clickupTaskId,
+      discussedAt: c.discussedAt ? c.discussedAt.toISOString() : null,
       createdAt: c.createdAt.toISOString(),
       updatedAt: c.updatedAt.toISOString(),
     };
@@ -104,6 +105,7 @@ async function emitCard(io: AppIO, sessionId: string, cardId: string, opts: { fo
     authorPersona: buildPersona(author),
     pushedToClickup: !!c.pushedToClickupAt,
     clickupTaskId: c.clickupTaskId,
+    discussedAt: c.discussedAt ? c.discussedAt.toISOString() : null,
     createdAt: c.createdAt.toISOString(),
     updatedAt: c.updatedAt.toISOString(),
   };
@@ -177,6 +179,7 @@ async function broadcastCardsRevealed(io: AppIO, sessionId: string) {
         },
         pushedToClickup: !!c.pushedToClickupAt,
         clickupTaskId: c.clickupTaskId,
+        discussedAt: c.discussedAt ? c.discussedAt.toISOString() : null,
         createdAt: c.createdAt.toISOString(),
         updatedAt: c.updatedAt.toISOString(),
       };
@@ -319,6 +322,21 @@ export function attachSocketHandlers(io: AppIO) {
       await db.delete(comments).where(eq(comments.cardId, id));
       await db.delete(cards).where(eq(cards.id, id));
       io.to(room(sid)).emit("card.deleted", { id });
+    });
+
+    socket.on("card.discussed.set", async ({ id, value }) => {
+      const sid = socket.data.sessionId;
+      const me = await getMe(socket);
+      if (!sid || !me) return;
+      const [s] = await db.select().from(sessions).where(eq(sessions.id, sid)).limit(1);
+      if (!s || s.status === "closed") return;
+      const [c] = await db.select().from(cards).where(eq(cards.id, id)).limit(1);
+      if (!c || c.sessionId !== sid) return;
+      await db
+        .update(cards)
+        .set({ discussedAt: value ? new Date() : null, updatedAt: new Date() })
+        .where(eq(cards.id, id));
+      await emitCard(io, sid, id);
     });
 
     socket.on("done.set", async ({ phase, value, targetParticipantId }) => {

@@ -51,15 +51,21 @@ export function RichEditor({
         <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={btn(editor.isActive("bulletList"))} aria-label="Bullets"><List size={14} /></button>
         <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={btn(editor.isActive("orderedList"))} aria-label="Numbered"><ListOrdered size={14} /></button>
         <span className="mx-1 h-4 w-px bg-[var(--color-border)]" />
-        <button type="button" onClick={() => colorRef.current?.click()} className={btn(false)} aria-label="Color"><Palette size={14} /></button>
-        <input
-          ref={colorRef}
-          type="color"
-          onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
-          className="hidden"
-        />
+        <span className="relative inline-flex">
+          <button type="button" onClick={() => colorRef.current?.click()} className={btn(false)} aria-label="Color"><Palette size={14} /></button>
+          {/* Native color picker anchors to this input's screen position, so we
+              keep it in-flow (absolute, behind the button) instead of hidden. */}
+          <input
+            ref={colorRef}
+            type="color"
+            onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
+            className="absolute inset-0 w-full h-full opacity-0 pointer-events-none"
+            tabIndex={-1}
+            aria-hidden
+          />
+        </span>
       </div>
-      <EditorContent editor={editor} className="prose prose-sm dark:prose-invert max-w-none p-2 min-h-24 focus:outline-none [&_.ProseMirror]:focus:outline-none [&_.ProseMirror]:min-h-20" />
+      <EditorContent editor={editor} className="prose prose-sm dark:prose-invert max-w-none p-2 min-h-24 focus:outline-none [&_.ProseMirror]:focus:outline-none [&_.ProseMirror]:min-h-20 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-0.5" />
     </div>
   );
 }

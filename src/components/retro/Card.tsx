@@ -1,7 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { PersonaAvatar } from "@/components/PersonaAvatar";
-import { ThumbsUp, ThumbsDown, Pencil, Trash2, MessageSquare } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Pencil, Trash2, MessageSquare, CheckCircle2, ChevronDown } from "lucide-react";
 import { useRetroStore } from "@/lib/retroStore";
 import { getSocket } from "@/lib/socket";
 import type { CardPayload, Persona } from "@/server/types";
@@ -29,6 +29,12 @@ export function Card({ card, readOnly }: { card: CardPayload; readOnly: boolean 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(card.text ?? "");
   const [showComments, setShowComments] = useState(false);
+  // When a card is marked Discussed, it collapses for everyone. Each user can
+  // locally expand it to peek without un-marking it for the team.
+  const [locallyExpanded, setLocallyExpanded] = useState(false);
+  const isDiscussed = !!card.discussedAt;
+  const collapsed = isDiscussed && !locallyExpanded;
+  const canMarkDiscussed = !readOnly && phase !== "writing" && !blurred;
 
   function castVote(kind: "like" | "dislike") {
     getSocket().emit("vote.cast", { cardId: card.id, kind });
@@ -41,17 +47,44 @@ export function Card({ card, readOnly }: { card: CardPayload; readOnly: boolean 
     getSocket().emit("card.update", { id: card.id, text: draft });
     setEditing(false);
   }
+  function toggleDiscussed() {
+    getSocket().emit("card.discussed.set", { id: card.id, value: !isDiscussed });
+    setLocallyExpanded(false);
+  }
 
   return (
-    <div className="rounded-xl bg-[var(--color-card)] border border-[var(--color-border)] p-3 group">
+    <div className={`rounded-xl bg-[var(--color-card)] border p-3 group ${isDiscussed ? "border-[var(--color-success)]/40 opacity-90" : "border-[var(--color-border)]"}`}>
       <div className="flex items-center gap-2">
         <PersonaAvatar persona={card.authorPersona} size={24} />
         <span className="text-xs text-[var(--color-muted)] font-medium">{card.authorPersona.name}</span>
         {card.pushedToClickup && (
-          <span className="ml-auto text-[10px] uppercase tracking-wide bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded px-1.5 py-0.5">In ClickUp</span>
+          <span className="text-[10px] uppercase tracking-wide bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded px-1.5 py-0.5">In ClickUp</span>
         )}
+        <div className="ml-auto flex items-center gap-1">
+          {isDiscussed && (
+            <button
+              type="button"
+              onClick={() => setLocallyExpanded((v) => !v)}
+              className="p-1 rounded hover:bg-[var(--color-bg)] text-[var(--color-muted)]"
+              aria-label={locallyExpanded ? "Hide" : "Show"}
+            >
+              <ChevronDown size={16} className={`transition-transform ${locallyExpanded ? "" : "-rotate-90"}`} />
+            </button>
+          )}
+          {canMarkDiscussed && (
+            <button
+              type="button"
+              onClick={toggleDiscussed}
+              className={`inline-flex items-center gap-1 text-xs rounded-md px-2 py-1 ${isDiscussed ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200" : "border border-[var(--color-border)] hover:bg-[var(--color-bg)]"}`}
+              title={isDiscussed ? "Reopen for discussion" : "Mark as discussed for everyone"}
+            >
+              <CheckCircle2 size={14} /> {isDiscussed ? "Reopen" : "Discussed"}
+            </button>
+          )}
+        </div>
       </div>
 
+      {!collapsed && (
       <div className="mt-2 text-sm">
         {blurred ? (
           <div className="skeleton-blur h-12">hidden during writing phase</div>
@@ -66,9 +99,10 @@ export function Card({ card, readOnly }: { card: CardPayload; readOnly: boolean 
           <p className="whitespace-pre-wrap break-words">{card.text}</p>
         )}
       </div>
+      )}
 
-      {!blurred && (
-        <div className="mt-2 flex items-center gap-3 text-[var(--color-muted)]">
+      {!blurred && !collapsed && (
+        <div className="mt-2 flex items-center gap-3 text-[var(--color-muted)] flex-wrap">
           {phase !== "writing" && (
             <>
               <Tooltip.Provider delayDuration={150}>
