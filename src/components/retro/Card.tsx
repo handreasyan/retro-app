@@ -4,8 +4,7 @@ import { PersonaAvatar } from "@/components/PersonaAvatar";
 import { ThumbsUp, ThumbsDown, Pencil, Trash2, MessageSquare, CheckCircle2, ChevronDown } from "lucide-react";
 import { useRetroStore } from "@/lib/retroStore";
 import { getSocket } from "@/lib/socket";
-import type { CardPayload, Persona } from "@/server/types";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import type { CardPayload } from "@/server/types";
 import { Comments } from "./Comments";
 import { Button } from "@/components/Button";
 
@@ -105,42 +104,22 @@ export function Card({ card, readOnly }: { card: CardPayload; readOnly: boolean 
         <div className="mt-2 flex items-center gap-3 text-[var(--color-muted)] flex-wrap">
           {phase !== "writing" && (
             <>
-              <Tooltip.Provider delayDuration={150}>
-                <Tooltip.Root>
-                  <Tooltip.Trigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => canVote && castVote("like")}
-                      disabled={!canVote}
-                      className={`inline-flex items-center gap-1 text-sm rounded-md px-1.5 py-0.5 ${vote?.myVote === "like" ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200" : "hover:bg-[var(--color-bg)]"}`}
-                    >
-                      <ThumbsUp size={14} /> {vote?.likeCount ?? 0}
-                    </button>
-                  </Tooltip.Trigger>
-                  <Tooltip.Portal>
-                    <Tooltip.Content className="rounded-md bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900 px-2 py-1 text-xs shadow-soft" sideOffset={6}>
-                      <VoterList voters={vote?.likeVoters ?? []} empty="No likes yet" />
-                    </Tooltip.Content>
-                  </Tooltip.Portal>
-                </Tooltip.Root>
-                <Tooltip.Root>
-                  <Tooltip.Trigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => canVote && castVote("dislike")}
-                      disabled={!canVote}
-                      className={`inline-flex items-center gap-1 text-sm rounded-md px-1.5 py-0.5 ${vote?.myVote === "dislike" ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200" : "hover:bg-[var(--color-bg)]"}`}
-                    >
-                      <ThumbsDown size={14} /> {vote?.dislikeCount ?? 0}
-                    </button>
-                  </Tooltip.Trigger>
-                  <Tooltip.Portal>
-                    <Tooltip.Content className="rounded-md bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900 px-2 py-1 text-xs shadow-soft" sideOffset={6}>
-                      <VoterList voters={vote?.dislikeVoters ?? []} empty="No dislikes yet" />
-                    </Tooltip.Content>
-                  </Tooltip.Portal>
-                </Tooltip.Root>
-              </Tooltip.Provider>
+              <button
+                type="button"
+                onClick={() => canVote && castVote("like")}
+                disabled={!canVote}
+                className={`inline-flex items-center gap-1 text-sm rounded-md px-1.5 py-0.5 ${vote?.myVote === "like" ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200" : "hover:bg-[var(--color-bg)]"}`}
+              >
+                <ThumbsUp size={14} /> {vote?.likeCount ?? 0}
+              </button>
+              <button
+                type="button"
+                onClick={() => canVote && castVote("dislike")}
+                disabled={!canVote}
+                className={`inline-flex items-center gap-1 text-sm rounded-md px-1.5 py-0.5 ${vote?.myVote === "dislike" ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200" : "hover:bg-[var(--color-bg)]"}`}
+              >
+                <ThumbsDown size={14} /> {vote?.dislikeCount ?? 0}
+              </button>
               <button
                 type="button"
                 onClick={() => setShowComments((v) => !v)}
@@ -173,17 +152,6 @@ export function Card({ card, readOnly }: { card: CardPayload; readOnly: boolean 
           <Comments cardId={card.id} canComment={canComment} />
         </div>
       )}
-    </div>
-  );
-}
-
-function VoterList({ voters, empty }: { voters: Persona[]; empty: string }) {
-  if (voters.length === 0) return <span className="text-zinc-300 dark:text-zinc-700">{empty}</span>;
-  return (
-    <div className="flex flex-col gap-0.5 min-w-32">
-      {voters.map((v, i) => (
-        <span key={i}>{v.name}</span>
-      ))}
     </div>
   );
 }

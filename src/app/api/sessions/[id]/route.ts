@@ -87,15 +87,12 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   for (const c of allCards) voteMap.set(c.id, {
     cardId: c.id, likeCount: 0, dislikeCount: 0, likeVoters: [], dislikeVoters: [], myVote: null,
   });
+  // Voter identities are private. Only send counts; never expose persona lists.
   for (const v of allVotes) {
     const card = voteMap.get(v.cardId);
     if (!card) continue;
-    const voter = allParticipants.find((p) => p.id === v.voterParticipantId);
-    const persona: Persona = voter ? buildPersona(voter) : {
-      kind: "named", slug: null, name: "Unknown", avatar: ANONYMOUS_AVATAR, anonymousNumber: null,
-    };
-    if (v.kind === "like") { card.likeCount++; card.likeVoters.push(persona); }
-    else { card.dislikeCount++; card.dislikeVoters.push(persona); }
+    if (v.kind === "like") card.likeCount++;
+    else card.dislikeCount++;
     if (me && v.voterParticipantId === me.id) card.myVote = v.kind;
   }
 

@@ -116,18 +116,9 @@ async function emitVote(io: AppIO, sessionId: string, cardId: string) {
   const [c] = await db.select().from(cards).where(eq(cards.id, cardId)).limit(1);
   if (!c) return;
   const allVotes = await db.select().from(votes).where(eq(votes.cardId, cardId));
-  const allParticipants = await db
-    .select()
-    .from(participants)
-    .where(eq(participants.sessionId, sessionId));
-  const likeVoters = allVotes.filter((v) => v.kind === "like").map((v) => {
-    const p = allParticipants.find((pp) => pp.id === v.voterParticipantId)!;
-    return buildPersona(p);
-  });
-  const dislikeVoters = allVotes.filter((v) => v.kind === "dislike").map((v) => {
-    const p = allParticipants.find((pp) => pp.id === v.voterParticipantId)!;
-    return buildPersona(p);
-  });
+  // Voter identities are private. Only send counts; do not leak persona lists.
+  const likeCount = allVotes.filter((v) => v.kind === "like").length;
+  const dislikeCount = allVotes.filter((v) => v.kind === "dislike").length;
 
   const sockets = await io.in(room(sessionId)).fetchSockets();
   for (const sock of sockets) {
@@ -135,10 +126,10 @@ async function emitVote(io: AppIO, sessionId: string, cardId: string) {
     const myVote = meId ? allVotes.find((v) => v.voterParticipantId === meId) : null;
     const payload: VotePayload = {
       cardId,
-      likeCount: likeVoters.length,
-      dislikeCount: dislikeVoters.length,
-      likeVoters,
-      dislikeVoters,
+      likeCount,
+      dislikeCount,
+      likeVoters: [],
+      dislikeVoters: [],
       myVote: myVote ? myVote.kind : null,
     };
     sock.emit("vote.changed", payload);
