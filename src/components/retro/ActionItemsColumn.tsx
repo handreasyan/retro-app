@@ -91,11 +91,11 @@ export function ActionItemsColumn({ cards, readOnly }: { cards: CardPayload[]; r
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-elev)] p-3 flex flex-col gap-3 shadow-soft">
-      <header className="flex items-center justify-between px-2">
+    <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-elev)] p-3 flex flex-col gap-3 shadow-soft lg:min-h-0 lg:overflow-hidden">
+      <header className="flex items-center justify-between px-2 shrink-0">
         <h2 className="text-sm font-semibold text-[var(--color-primary)]">Action items · {cards.length}</h2>
       </header>
-      <div className="flex flex-col gap-2 min-h-10">
+      <div className="flex flex-col gap-2 min-h-10 lg:flex-1 lg:overflow-y-auto lg:min-h-0 pr-1">
         {cards.map((c) => {
           const isMine = c.authorParticipantId === myParticipantId;
           const canMutate = !readOnly && (isMine || me?.role === "admin") && session?.status !== "closed";
@@ -126,7 +126,7 @@ export function ActionItemsColumn({ cards, readOnly }: { cards: CardPayload[]; r
       </div>
       {canAdd && (
         adding ? (
-          <div className="flex flex-col gap-2 mt-auto pt-2 border-t border-[var(--color-border)]">
+          <div className="flex flex-col gap-2 mt-auto pt-2 border-t border-[var(--color-border)] shrink-0">
             <RichEditor
               text={draftText}
               richText={draftRich}

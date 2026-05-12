@@ -39,8 +39,8 @@ export function ColumnView({
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-elev)] p-3 flex flex-col gap-3 shadow-soft">
-      <header className="flex items-center justify-between px-2">
+    <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-elev)] p-3 flex flex-col gap-3 shadow-soft lg:min-h-0 lg:overflow-hidden">
+      <header className="flex items-center justify-between px-2 shrink-0">
         <h2 className={`text-sm font-semibold ${tone === "success" ? "text-[var(--color-success)]" : "text-[var(--color-warning)]"}`}>
           {title} · {cards.length}
         </h2>
@@ -53,7 +53,7 @@ export function ColumnView({
           <ChevronDown size={18} className={`transition-transform ${collapsed ? "-rotate-90" : ""}`} />
         </button>
       </header>
-      <div className={`${collapsed ? "hidden" : "flex"} sm:flex flex-col gap-2 min-h-10`}>
+      <div className={`${collapsed ? "hidden" : "flex"} sm:flex flex-col gap-2 min-h-10 lg:flex-1 lg:overflow-y-auto lg:min-h-0 pr-1`}>
         {cards.map((c) => (
           <Card key={c.id} card={c} readOnly={readOnly} />
         ))}
@@ -62,7 +62,7 @@ export function ColumnView({
         )}
       </div>
       {canAdd && (
-        <div className={`${collapsed ? "hidden" : "flex"} sm:flex flex-col gap-2 mt-auto pt-2 border-t border-[var(--color-border)]`}>
+        <div className={`${collapsed ? "hidden" : "flex"} sm:flex flex-col gap-2 mt-auto pt-2 border-t border-[var(--color-border)] shrink-0`}>
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}

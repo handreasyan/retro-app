@@ -49,8 +49,8 @@ export function Board({ readOnly }: { readOnly: boolean }) {
   const actionItems = sortedCards.filter((c) => c.column === "action_item");
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4 sm:py-6 space-y-4">
-      <div className="flex items-start sm:items-center justify-between gap-2 flex-wrap">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-4 lg:h-[calc(100dvh-3.75rem)] lg:overflow-hidden">
+      <div className="flex items-start sm:items-center justify-between gap-2 flex-wrap shrink-0">
         <div className="min-w-0">
           <h1 className="text-lg sm:text-xl font-semibold tracking-tight truncate">{session.title}</h1>
           <p className="text-xs text-[var(--color-muted)]">
@@ -63,9 +63,9 @@ export function Board({ readOnly }: { readOnly: boolean }) {
         </div>
       </div>
 
-      {!readOnly && <ProgressBanner />}
+      {!readOnly && <div className="shrink-0"><ProgressBanner /></div>}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 lg:flex-1 lg:min-h-0">
         <ColumnView
           title="Went well"
           tone="success"
