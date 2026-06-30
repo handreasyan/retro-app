@@ -12,7 +12,7 @@ Internal retrospective tool for. See `PRD.md` for the product spec and `TECH_PLA
 | Multi-user real-time | Wired end-to-end (Socket.IO rooms, presence, blur boundary, voting, comments, action items). |
 | Demo deployment | Render (free Web Service) + Neon (free Postgres) from `handreasyan/retro-app`. See [Current demo deployment](#current-demo-deployment). |
 | ClickUp integration | Code complete, no-ops without env vars. Will light up once SRE provides the four `CLICKUP_*` envs. |
-| Production deploy | Pending. SRE-side. Needs DNS `retro.cloudchipr.com`, managed Postgres, ClickUp envs. |
+| Production deploy | Pending. SRE-side. Needs DNS, managed Postgres, ClickUp envs. |
 | Mobile-native app | Out of scope. |
 
 ## Stack
