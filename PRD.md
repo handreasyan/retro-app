@@ -1,6 +1,6 @@
 # Retro - Product Requirements
 
-Internal retrospective tool for Cloudchipr, hosted at `retro.cloudchipr.com`. Replaces EasyRetro for our team. Anonymous participation, single active session at a time, admin-driven phases.
+Internal retrospective tool. Replaces EasyRetro for our team. Anonymous participation, single active session at a time, admin-driven phases.
 
 ## Roles
 
@@ -71,7 +71,7 @@ The shared anonymous icon at `public/avatars/_anonymous.png` is also provided by
 
 ### Pre-session
 
-- User opens `retro.cloudchipr.com`, picks role.
+- User opens page, picks role.
 - If no active retro: admin sees "Start new retro" button. Participants see "No active retro".
 - If an active retro exists: "Start new retro" is hidden/disabled (only one at a time).
 - "Start new retro" opens a small dialog with a **Title** input. Title is required, cannot be empty.
