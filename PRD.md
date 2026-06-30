@@ -149,7 +149,7 @@ Admin actions on other users' content are not silently masked; they are reflecte
 
 - Light, dark, and system (follow OS) themes. Default: system.
 - Theme is per-browser (stored in `localStorage`), not per-session.
-- Visual style: clean, soft palette. No Cloudchipr branding. Restrained colors, generous spacing, subtle shadows.
+- Visual style: clean, soft palette. Restrained colors, generous spacing, subtle shadows.
 
 ## Search
 
