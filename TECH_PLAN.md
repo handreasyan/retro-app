@@ -12,7 +12,7 @@ Companion to `PRD.md`. Stack choices, data model, real-time approach, and the se
 | DB | PostgreSQL | Standard, durable, fits the relational shape |
 | ORM | Drizzle | Lighter than Prisma, type-safe, easy migrations |
 | State on client | Zustand + Socket.IO event handlers | No need for heavy state libs |
-| Hosting | Single Docker container (Next.js + Socket.IO + Postgres separate) | SRE deploys; subdomain `retro.cloudchipr.com` |
+| Hosting | Single Docker container (Next.js + Socket.IO + Postgres separate) | SRE deploys|
 
 Alternatives considered: Convex (great DX, vendor lockin), Supabase (overkill, we don't need auth), Pusher/Ably (extra moving part for an internal tool).
 
