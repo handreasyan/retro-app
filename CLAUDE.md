@@ -2,7 +2,7 @@
 
 # Retro — Claude guide
 
-Internal retrospective tool for Cloudchipr, prototyped solo. Replaces EasyRetro. This file is what a fresh Claude session needs to know before touching the code.
+Internal retrospective tool, prototyped solo. Replaces EasyRetro. This file is what a fresh Claude session needs to know before touching the code.
 
 ## What this is
 
