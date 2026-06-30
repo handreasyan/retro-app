@@ -182,10 +182,10 @@ Sorting is client-side. Server returns cards in any order; clients sort by `like
 ## Deployment notes (for SRE)
 
 - Single Docker image, Next.js with custom `server.ts` to mount Socket.IO.
-- Postgres managed separately (RDS, CloudSQL, whatever Cloudchipr uses).
+- Postgres managed separately (RDS, CloudSQL).
 - Env vars: `DATABASE_URL`, `PORT`, `COOKIE_SECRET`.
 - Sticky sessions required if we ever scale beyond one instance (Socket.IO). For an internal tool of one team, one instance is fine.
-- DNS: `retro.cloudchipr.com` -> the container.
+- DNS:
 
 ## Action items
 
