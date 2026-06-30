@@ -153,9 +153,6 @@ Once promoted to the production environment, the SRE-side version should:
 
 - Build a static artifact (compile `server.ts` into `dist/`) so `tsx` is no longer a runtime dependency.
 - Run on the company's normal Node infra with a managed Postgres.
-- Be reachable at `retro.cloudchipr.com` via DNS.
 - Have the four ClickUp env vars set so the title-prefill and action-item push features light up.
 
-### Future: production target
 
-DNS: `retro.cloudchipr.com` -> the container.
