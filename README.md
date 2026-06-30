@@ -1,6 +1,6 @@
 # Retro
 
-Internal retrospective tool for Cloudchipr. See `PRD.md` for the product spec and `TECH_PLAN.md` for the architecture.
+Internal retrospective tool for. See `PRD.md` for the product spec and `TECH_PLAN.md` for the architecture.
 
 ## Project status
 
